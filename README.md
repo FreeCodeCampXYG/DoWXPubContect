@@ -14,8 +14,11 @@ python3 -m http.server 4173
 
 ## 功能
 
-- Reddit / RSS（含 Nitter）热点抓取（静态部署自动避开 Reddit 直连并回退 RSS）
+- Reddit / RSS（含 Nitter）热点抓取（自动清洗摘要，静态部署自动避开 Reddit 直连并回退 RSS）
 - OpenRouter 免费模型改写
 - Pollinations 免费生图 URL 生成
 - 微信公众号富文本 HTML 生成与一键复制
 - localStorage 保存 API Key 和草稿
+
+- 新增「免Key快速改写」按钮（免费翻译服务 + 模板改写兜底）
+- 生图预览失败时自动切换图片代理（images.weserv.nl）

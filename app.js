@@ -44,6 +44,17 @@ function loadLocal() {
   dom.aiOutput.value = localStorage.getItem("draft_ai") || "";
 }
 
+function decodeHtml(text = "") {
+  const textarea = document.createElement("textarea");
+  textarea.innerHTML = text;
+  return textarea.value.replace(/\s+/g, " ").trim();
+}
+
+function trimText(text = "", max = 360) {
+  if (text.length <= max) return text;
+  return `${text.slice(0, max)}...`;
+}
+
 async function fetchJsonWithFallbacks(endpoints, errorPrefix) {
   let lastError = "";
   for (const endpoint of endpoints) {
@@ -66,8 +77,8 @@ async function fetchJsonWithFallbacks(endpoints, errorPrefix) {
 function mapRedditChildren(json) {
   if (!json?.data?.children) throw new Error("Reddit 数据格式异常，请更换数据源（如 RSS / Nitter）");
   return json.data.children.map((c) => ({
-    title: c.data.title,
-    summary: c.data.selftext || c.data.url,
+    title: decodeHtml(c.data.title || ""),
+    summary: trimText(decodeHtml(c.data.selftext || c.data.url || "")),
     link: `https://reddit.com${c.data.permalink}`
   }));
 }
@@ -75,8 +86,6 @@ function mapRedditChildren(json) {
 async function fetchReddit(subreddit) {
   const safeSubreddit = encodeURIComponent(subreddit || "technology");
   const redditJsonUrl = `https://www.reddit.com/r/${safeSubreddit}/top/.json?t=day&limit=10&raw_json=1`;
-
-  // 静态站部署时不要先直连 reddit（会在控制台抛 CORS 错误），优先走可跨域链路
   const preferProxyOnly = window.location.protocol.startsWith("http")
     && !["localhost", "127.0.0.1"].includes(window.location.hostname);
 
@@ -95,8 +104,7 @@ async function fetchReddit(subreddit) {
     const json = await fetchJsonWithFallbacks(endpoints, "Reddit 热点抓取失败（可能是 CORS 或源站拦截）");
     return mapRedditChildren(json);
   } catch (_error) {
-    const rssFallback = await fetchRssViaRss2Json(`https://www.reddit.com/r/${safeSubreddit}/.rss`);
-    return rssFallback;
+    return fetchRssViaRss2Json(`https://www.reddit.com/r/${safeSubreddit}/.rss`);
   }
 }
 
@@ -106,8 +114,8 @@ async function fetchRssViaRss2Json(feedUrl) {
   if (!res.ok) throw new Error("RSS 转换失败，请检查 RSS 地址或稍后重试");
   const json = await res.json();
   return (json.items || []).slice(0, 10).map((i) => ({
-    title: i.title,
-    summary: i.description?.replace(/<[^>]+>/g, "") || "",
+    title: decodeHtml(i.title || ""),
+    summary: trimText(decodeHtml(i.contentSnippet || i.description || "")),
     link: i.link
   }));
 }
@@ -133,6 +141,10 @@ const generateImage = (keyword) => {
   const seed = Math.floor(Math.random() * 1000);
   return `https://image.pollinations.ai/prompt/${encodeURIComponent(keyword)}?width=${width}&height=${height}&seed=${seed}&nologo=true`;
 };
+
+function toImageProxyUrl(url) {
+  return `https://images.weserv.nl/?url=${encodeURIComponent(url.replace(/^https?:\/\//, ""))}`;
+}
 
 function buildWechatHtml(content, imageUrl) {
   const title = (content.split("\n")[0] || "今日科技热点").slice(0, 60);
@@ -166,7 +178,7 @@ function copyToWechat() {
 async function rewriteWithOpenRouter() {
   const apiKey = dom.apiKey.value.trim();
   if (!apiKey) {
-    alert("请先输入 OpenRouter API Key");
+    alert("请先输入 OpenRouter API Key，或使用“免Key快速改写”按钮");
     return;
   }
 
@@ -203,6 +215,44 @@ async function rewriteWithOpenRouter() {
   dom.aiOutput.value = data.choices?.[0]?.message?.content || "(空响应)";
 }
 
+async function translateTextFree(input) {
+  if (!input.trim()) return "";
+  const endpoint = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(input)}&langpair=en|zh-CN`;
+  const res = await fetch(endpoint);
+  if (!res.ok) throw new Error("免费翻译服务不可用");
+  const json = await res.json();
+  return json?.responseData?.translatedText || input;
+}
+
+async function quickRewriteNoKey() {
+  const source = dom.rawInput.value.trim();
+  if (!source) {
+    alert("请先输入或选择原始素材");
+    return;
+  }
+
+  let zh = source;
+  try {
+    zh = await translateTextFree(source);
+  } catch (_error) {
+    // 翻译失败时使用原文模板兜底
+  }
+
+  const lines = zh.split("\n").map((v) => v.trim()).filter(Boolean);
+  const titleLine = lines.find((line) => line.startsWith("标题")) || lines[0] || "今日科技热点速览";
+  const core = lines.slice(1).join("\n");
+
+  dom.aiOutput.value = [
+    `【${titleLine.replace(/^标题[:：]?\s*/, "") || "今日科技热点速览"}】`,
+    "",
+    "先说结论：这条消息背后反映的是产业节奏变化，短期看是事件，长期看是趋势。",
+    "",
+    `核心信息：${core || zh}`,
+    "",
+    "延展点评：从传播角度看，这类新闻更适合用“事实+影响+观点”三段式表达，便于公众号读者快速抓重点。"
+  ].join("\n");
+}
+
 document.getElementById("fetch-source").addEventListener("click", async () => {
   try {
     const platform = dom.platform.value;
@@ -224,6 +274,14 @@ document.getElementById("rewrite-btn").addEventListener("click", async () => {
   }
 });
 
+document.getElementById("rewrite-no-key-btn").addEventListener("click", async () => {
+  try {
+    await quickRewriteNoKey();
+  } catch (error) {
+    alert(error.message);
+  }
+});
+
 document.getElementById("save-draft-btn").addEventListener("click", saveLocal);
 
 document.getElementById("generate-image-btn").addEventListener("click", () => {
@@ -231,6 +289,11 @@ document.getElementById("generate-image-btn").addEventListener("click", () => {
   const url = generateImage(keyword);
   dom.imageUrl.value = url;
   dom.previewImage.src = url;
+  dom.previewImage.onerror = () => {
+    const proxyUrl = toImageProxyUrl(url);
+    dom.imageUrl.value = proxyUrl;
+    dom.previewImage.src = proxyUrl;
+  };
 });
 
 document.getElementById("render-wechat-btn").addEventListener("click", () => {

@@ -29,7 +29,7 @@
       <div class="actions">
         <button id="fetch-source">抓取热点</button>
       </div>
-      <p class="hint">提示：Reddit 在静态部署中可能跨域，系统会自动走代理并回退到 Reddit RSS。</p>
+      <p class="hint">提示：热点会自动清洗摘要；静态部署下 Reddit 自动走代理并回退 RSS。</p>
       <ul id="source-list" class="list"></ul>
     </section>
 
@@ -53,6 +53,7 @@
       </label>
       <div class="actions">
         <button id="rewrite-btn">AI 洗稿生成</button>
+        <button id="rewrite-no-key-btn">免Key快速改写</button>
         <button id="save-draft-btn">保存草稿</button>
       </div>
       <label>AI 输出
