@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>全球视野自媒体工作台</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <h1>🌍 全球视野自媒体工作台</h1>
+    <p>国际热点采集 → AI 二创 → 生图 → 微信排版，一站式完成。</p>
+  </header>
+
+  <main class="grid">
+    <section class="card">
+      <h2>1) 国际热点采集池</h2>
+      <div class="row">
+        <label>平台
+          <select id="source-platform">
+            <option value="reddit">Reddit</option>
+            <option value="rss">RSS / Nitter</option>
+          </select>
+        </label>
+        <label>目标
+          <input id="source-target" value="technology" placeholder="如: technology / spacex 或 RSS URL" />
+        </label>
+      </div>
+      <div class="actions">
+        <button id="fetch-source">抓取热点</button>
+      </div>
+      <p class="hint">提示：Reddit 在静态部署中可能触发跨域，已内置代理回退。</p>
+      <ul id="source-list" class="list"></ul>
+    </section>
+
+    <section class="card">
+      <h2>2) AI 深度创作引擎</h2>
+      <div class="row">
+        <label>OpenRouter API Key
+          <input id="api-key" type="password" placeholder="sk-or-v1-..." />
+        </label>
+        <label>模型
+          <input id="model" value="meta-llama/llama-3.1-8b-instruct:free" />
+        </label>
+      </div>
+      <div class="row">
+        <label>改写风格
+          <select id="style-select"></select>
+        </label>
+      </div>
+      <label>原始素材
+        <textarea id="raw-input" rows="8" placeholder="可点击左侧热点自动填充，也可手工粘贴"></textarea>
+      </label>
+      <div class="actions">
+        <button id="rewrite-btn">AI 洗稿生成</button>
+        <button id="save-draft-btn">保存草稿</button>
+      </div>
+      <label>AI 输出
+        <textarea id="ai-output" rows="12" placeholder="这里显示改写后的中文稿件"></textarea>
+      </label>
+    </section>
+
+    <section class="card">
+      <h2>3) 视觉增强模块</h2>
+      <div class="row">
+        <label>生图关键词
+          <input id="image-keyword" placeholder="如：Starship launch over ocean" />
+        </label>
+      </div>
+      <div class="actions">
+        <button id="generate-image-btn">生成插画 URL</button>
+      </div>
+      <input id="image-url" readonly />
+      <img id="preview-image" alt="AI 插画预览" />
+    </section>
+
+    <section class="card full">
+      <h2>4) 公众号一键排版</h2>
+      <div class="actions">
+        <button id="render-wechat-btn">生成公众号 HTML</button>
+        <button id="copy-wechat-btn">复制排版内容</button>
+      </div>
+      <label>排版 HTML（可直接复制到公众号后台）
+        <textarea id="html-output" rows="10"></textarea>
+      </label>
+      <article id="editor-output"></article>
+    </section>
+
+    <section class="card full">
+      <h2>数据源配置表</h2>
+      <table>
+        <thead>
+          <tr><th>平台</th><th>获取方式</th><th>推荐源示例</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>SpaceX / NASA</td><td>官网 RSS</td><td>https://www.spacex.com/feeds/news</td></tr>
+          <tr><td>X (Twitter)</td><td>Nitter RSS</td><td>https://nitter.net/elonmusk/rss</td></tr>
+          <tr><td>Reddit</td><td>JSON 接口</td><td>https://www.reddit.com/r/technology/.json</td></tr>
+          <tr><td>科技媒体</td><td>标准 RSS</td><td>https://techcrunch.com/feed</td></tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+
+  <template id="item-template">
+    <li>
+      <button class="link-like"></button>
+    </li>
+  </template>
+
+  <script src="app.js"></script>
+</body>
+</html>
