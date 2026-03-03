@@ -81,3 +81,9 @@ th, td { border: 1px solid #dbe2ef; padding: 8px; text-align: left; }
   padding: 12px;
   background: #fff;
 }
+
+.hint {
+  margin: 0 0 8px;
+  color: #475569;
+  font-size: 12px;
+}

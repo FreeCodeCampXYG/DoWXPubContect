@@ -44,11 +44,35 @@ function loadLocal() {
   dom.aiOutput.value = localStorage.getItem("draft_ai") || "";
 }
 
+async function fetchJsonWithFallbacks(url) {
+  const endpoints = [
+    url,
+    `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
+    `https://r.jina.ai/http://${url.replace(/^https?:\/\//, "")}`
+  ];
+
+  let lastError = "";
+  for (const endpoint of endpoints) {
+    try {
+      const res = await fetch(endpoint);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const contentType = res.headers.get("content-type") || "";
+      if (contentType.includes("application/json")) {
+        return await res.json();
+      }
+      const text = await res.text();
+      return JSON.parse(text);
+    } catch (error) {
+      lastError = `${endpoint} -> ${error.message}`;
+    }
+  }
+  throw new Error(`热点抓取失败（可能是 CORS 或源站拦截）：${lastError}`);
+}
+
 async function fetchReddit(subreddit) {
-  const url = `https://www.reddit.com/r/${encodeURIComponent(subreddit)}/top/.json?t=day&limit=10`;
-  const res = await fetch(url);
-  if (!res.ok) throw new Error("Reddit 拉取失败");
-  const json = await res.json();
+  const url = `https://www.reddit.com/r/${encodeURIComponent(subreddit)}/top/.json?t=day&limit=10&raw_json=1`;
+  const json = await fetchJsonWithFallbacks(url);
+  if (!json?.data?.children) throw new Error("Reddit 数据格式异常，请更换数据源（如 RSS / Nitter）");
   return json.data.children.map((c) => ({
     title: c.data.title,
     summary: c.data.selftext || c.data.url,
@@ -59,7 +83,7 @@ async function fetchReddit(subreddit) {
 async function fetchRssViaRss2Json(feedUrl) {
   const api = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(feedUrl)}`;
   const res = await fetch(api);
-  if (!res.ok) throw new Error("RSS 转换失败");
+  if (!res.ok) throw new Error("RSS 转换失败，请检查 RSS 地址或稍后重试");
   const json = await res.json();
   return (json.items || []).slice(0, 10).map((i) => ({
     title: i.title,
