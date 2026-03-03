@@ -44,13 +44,7 @@ function loadLocal() {
   dom.aiOutput.value = localStorage.getItem("draft_ai") || "";
 }
 
-async function fetchJsonWithFallbacks(url) {
-  const endpoints = [
-    url,
-    `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
-    `https://r.jina.ai/http://${url.replace(/^https?:\/\//, "")}`
-  ];
-
+async function fetchJsonWithFallbacks(endpoints, errorPrefix) {
   let lastError = "";
   for (const endpoint of endpoints) {
     try {
@@ -66,18 +60,44 @@ async function fetchJsonWithFallbacks(url) {
       lastError = `${endpoint} -> ${error.message}`;
     }
   }
-  throw new Error(`热点抓取失败（可能是 CORS 或源站拦截）：${lastError}`);
+  throw new Error(`${errorPrefix}：${lastError}`);
 }
 
-async function fetchReddit(subreddit) {
-  const url = `https://www.reddit.com/r/${encodeURIComponent(subreddit)}/top/.json?t=day&limit=10&raw_json=1`;
-  const json = await fetchJsonWithFallbacks(url);
+function mapRedditChildren(json) {
   if (!json?.data?.children) throw new Error("Reddit 数据格式异常，请更换数据源（如 RSS / Nitter）");
   return json.data.children.map((c) => ({
     title: c.data.title,
     summary: c.data.selftext || c.data.url,
     link: `https://reddit.com${c.data.permalink}`
   }));
+}
+
+async function fetchReddit(subreddit) {
+  const safeSubreddit = encodeURIComponent(subreddit || "technology");
+  const redditJsonUrl = `https://www.reddit.com/r/${safeSubreddit}/top/.json?t=day&limit=10&raw_json=1`;
+
+  // 静态站部署时不要先直连 reddit（会在控制台抛 CORS 错误），优先走可跨域链路
+  const preferProxyOnly = window.location.protocol.startsWith("http")
+    && !["localhost", "127.0.0.1"].includes(window.location.hostname);
+
+  const endpoints = preferProxyOnly
+    ? [
+      `https://api.allorigins.win/raw?url=${encodeURIComponent(redditJsonUrl)}`,
+      `https://r.jina.ai/http://${redditJsonUrl.replace(/^https?:\/\//, "")}`
+    ]
+    : [
+      redditJsonUrl,
+      `https://api.allorigins.win/raw?url=${encodeURIComponent(redditJsonUrl)}`,
+      `https://r.jina.ai/http://${redditJsonUrl.replace(/^https?:\/\//, "")}`
+    ];
+
+  try {
+    const json = await fetchJsonWithFallbacks(endpoints, "Reddit 热点抓取失败（可能是 CORS 或源站拦截）");
+    return mapRedditChildren(json);
+  } catch (_error) {
+    const rssFallback = await fetchRssViaRss2Json(`https://www.reddit.com/r/${safeSubreddit}/.rss`);
+    return rssFallback;
+  }
 }
 
 async function fetchRssViaRss2Json(feedUrl) {

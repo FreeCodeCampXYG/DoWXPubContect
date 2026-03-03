@@ -14,7 +14,7 @@ python3 -m http.server 4173
 
 ## 功能
 
-- Reddit / RSS（含 Nitter）热点抓取（内置跨域回退：allorigins / r.jina.ai）
+- Reddit / RSS（含 Nitter）热点抓取（静态部署自动避开 Reddit 直连并回退 RSS）
 - OpenRouter 免费模型改写
 - Pollinations 免费生图 URL 生成
 - 微信公众号富文本 HTML 生成与一键复制
