@@ -87,3 +87,14 @@ th, td { border: 1px solid #dbe2ef; padding: 8px; text-align: left; }
   color: #475569;
   font-size: 12px;
 }
+
+
+.status {
+  margin: 0;
+  font-size: 14px;
+  color: #334155;
+}
+.status.loading { color: #1d4ed8; }
+.status.success { color: #166534; }
+.status.error { color: #b91c1c; }
+button:disabled { opacity: .6; cursor: not-allowed; }
