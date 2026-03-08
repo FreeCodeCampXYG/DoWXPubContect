@@ -1,0 +1,35 @@
+:root {
+  --bg: #f4f6fb;
+  --card: #fff;
+  --text: #1f2937;
+  --primary: #2563eb;
+  --muted: #64748b;
+  --border: #dbe2ef;
+  --quote-bg: #eff6ff;
+}
+body.style-tech { --primary: #2563eb; --quote-bg: #eff6ff; }
+body.style-business { --primary: #a16207; --quote-bg: #fffbeb; }
+body.style-emotion { --primary: #be185d; --quote-bg: #fdf2f8; }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", sans-serif; }
+.topbar { background: linear-gradient(135deg, #0f172a, var(--primary)); color: #fff; padding: 18px; }
+.topbar h1 { margin: 0; }
+.grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(330px,1fr)); gap: 16px; padding: 16px; }
+.card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 14px; }
+.card.full { grid-column: 1 / -1; }
+.row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+label { display:flex; flex-direction: column; gap:6px; font-size:14px; margin: 8px 0; }
+input, textarea, select, button { border:1px solid #cbd5e1; border-radius:8px; padding:9px; font-size:14px; }
+button { border: none; background: var(--primary); color: #fff; cursor: pointer; }
+button:disabled { opacity: .6; cursor: not-allowed; }
+.actions { display:flex; gap:8px; flex-wrap: wrap; margin: 8px 0 10px; }
+.list { margin:0; padding-left:20px; max-height: 280px; overflow:auto; }
+.link-like { background: transparent; color: #0f172a; border: none; text-align:left; padding:0; text-decoration: underline; }
+.hint { color: var(--muted); font-size: 12px; margin: 0 0 8px; }
+.status { margin:0; color: var(--muted); }
+.status.loading { color: #1d4ed8; }
+.status.success { color: #166534; }
+.status.error { color: #b91c1c; }
+.preview { border: 1px dashed #94a3b8; border-radius: 8px; padding: 12px; background: #fff; min-height: 80px; }
+.image-grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; }
+.image-grid img { width:100%; border-radius:12px; margin: 6px 0; border: 1px solid var(--border); }

@@ -1,27 +1,42 @@
-# 全球视野自媒体工作台
+# GitHub Pages 自媒体热点采集 + AI 深度创作系统
 
-纯前端工具：抓取国际热点、AI 改写、生图、微信排版。
+纯前端（HTML/CSS/原生 JS）项目，可直接部署在 GitHub Pages。
+
+## 目录结构
+
+```text
+/index.html
+/css/style.css
+/js/app.js
+/js/sources.js
+/js/articleFetcher.js
+/js/promptBuilder.js
+/js/aiClient.js
+/js/markdownRenderer.js
+/js/wechatFormatter.js
+/js/imageGenerator.js
+/js/storage.js
+```
+
+## 功能
+
+- 多平台热点采集（Reddit / Google News / Nitter / SpaceX）
+- RSS 转 JSON + 热点列表渲染
+- 点击热点后自动全文抓取（allorigins + DOMParser）
+- 英文自动翻译（分段，避免单次长度限制）
+- OpenRouter 深度改写（结构化 Markdown）
+- Markdown 自动渲染（marked.js）
+- 公众号样式排版（科技 / 商业 / 情感）
+- Pollinations 自动生成 3 张插图并插入
+- 一键复制安全 HTML（清理 script）
+- localStorage 保存 API Key / 草稿 / 样式
 
 ## 使用
 
-直接打开 `index.html`，或启动本地服务：
+直接打开 `index.html`，或本地服务：
 
 ```bash
 python3 -m http.server 4173
 ```
 
-然后访问 `http://localhost:4173`。
-
-## 功能
-
-- Reddit / RSS（含 Nitter）热点抓取（自动清洗摘要，静态部署自动避开 Reddit 直连并回退 RSS）
-- OpenRouter 免费模型改写
-- Pollinations 免费生图 URL 生成
-- 微信公众号富文本 HTML 生成与一键复制
-- localStorage 保存 API Key 和草稿
-
-- 新增「免Key快速改写」按钮（免费翻译服务 + 模板改写兜底）
-- 生图预览失败时自动切换图片代理（images.weserv.nl）
-
-- 页面状态反馈（抓取/改写/生图阶段有进度提示）
-- 免Key改写支持“链接深度抓取 + 分段翻译 + 结构化总结”
+访问：`http://localhost:4173`
