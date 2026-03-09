@@ -122,13 +122,13 @@ async function rewriteContent() {
   setStatus("AI 深度改写完成", "success");
 }
 
-function quickRewriteNoKey() {
+async function quickRewriteNoKey() {
   const raw = dom.rawInput.value.trim();
   if (!raw) throw new Error("请先抓取素材再改写");
-  const article = window.buildNoKeyLongArticle(raw, dom.rewriteStyle.value);
+  const article = await window.buildNoKeyLongArticle(raw, dom.rewriteStyle.value);
   dom.aiOutput.value = article;
   dom.markdownPreview.innerHTML = window.renderMarkdown(article);
-  setStatus("免Key改写完成（约800-1000字）", "success");
+  setStatus("免Key改写完成（已调用免费大模型）", "success");
 }
 
 function generateImages() {
@@ -175,8 +175,21 @@ function formatWechat() {
 async function copyWechat() {
   const safe = window.sanitizeForCopy(dom.htmlOutput.value);
   if (!safe) throw new Error("请先生成公众号 HTML");
-  await navigator.clipboard.writeText(safe);
-  setStatus("已复制 HTML，可粘贴到公众号后台", "success");
+
+  dom.wechatPreview.innerHTML = safe;
+  const range = document.createRange();
+  range.selectNodeContents(dom.wechatPreview);
+  const sel = window.getSelection();
+  sel.removeAllRanges();
+  sel.addRange(range);
+
+  const ok = document.execCommand("copy");
+  sel.removeAllRanges();
+
+  if (!ok) {
+    await navigator.clipboard.writeText(safe);
+  }
+  setStatus("已复制富文本，可直接粘贴到公众号后台", "success");
 }
 
 function saveDraft() {
@@ -228,7 +241,7 @@ function initEvents() {
     try {
       await withLoading(dom.rewriteNoKeyBtn, "生成中...", async () => {
         setStatus("正在免Key扩写长文...", "loading");
-        quickRewriteNoKey();
+        await quickRewriteNoKey();
       });
     } catch (error) {
       setStatus(error.message, "error");
