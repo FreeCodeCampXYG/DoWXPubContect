@@ -7,7 +7,6 @@
   <link rel="stylesheet" href="css/style.css" />
 </head>
 <body class="style-tech">
-<<<<<<< HEAD
   <div class="page-shell">
     <div class="page-backdrop" aria-hidden="true">
       <span class="backdrop-orb backdrop-orb-a"></span>
@@ -193,99 +192,6 @@
       </section>
     </main>
   </div>
-=======
-  <header class="topbar">
-    <h1>🌍 全球视野自媒体工作台</h1>
-    <p>热点采集 → 全文抓取 → 翻译改写 → Markdown 解析 → 公众号排版</p>
-  </header>
-
-  <main class="grid">
-    <section class="card full">
-      <p id="status" class="status">状态：就绪</p>
-    </section>
-
-    <section class="card">
-      <h2>1) 热点采集</h2>
-      <div class="row">
-        <label>平台
-          <select id="source-platform"></select>
-        </label>
-        <label>目标
-          <input id="source-target" placeholder="如 technology / spacex / ElonMusk / AI" value="technology" />
-        </label>
-      </div>
-      <div class="actions">
-        <button id="fetch-source">抓取热点</button>
-      </div>
-      <ul id="source-list" class="list"></ul>
-    </section>
-
-    <section class="card">
-      <h2>2) AI 深度创作</h2>
-      <div class="row">
-        <label>OpenRouter API Key
-          <input id="api-key" type="password" placeholder="sk-or-v1-..." />
-        </label>
-        <label>模型
-          <input id="model" value="meta-llama/llama-3.1-8b-instruct:free" />
-        </label>
-      </div>
-      <div class="row">
-        <label>改写风格
-          <select id="rewrite-style">
-            <option>硬核科普</option>
-            <option>商业分析</option>
-            <option>情感共鸣</option>
-          </select>
-        </label>
-        <label>公众号样式
-          <select id="theme-style">
-            <option value="style-tech">科技蓝</option>
-            <option value="style-business">商业金</option>
-            <option value="style-emotion">暖色共鸣</option>
-          </select>
-        </label>
-      </div>
-      <label>原始素材（自动填充全文）
-        <textarea id="raw-input" rows="10"></textarea>
-      </label>
-      <div class="actions">
-        <button id="rewrite-btn">AI 深度改写</button>
-        <button id="rewrite-no-key-btn">免Key快速改写</button>
-        <button id="save-draft-btn">保存草稿</button>
-      </div>
-      <label>Markdown 输出
-        <textarea id="ai-output" rows="12"></textarea>
-      </label>
-    </section>
-
-    <section class="card">
-      <h2>3) AI 插图</h2>
-      <p class="hint">自动提取关键词并生成 3 张插图</p>
-      <div class="actions">
-        <button id="generate-images-btn">生成插图</button>
-      </div>
-      <div id="image-grid" class="image-grid"></div>
-    </section>
-
-    <section class="card full">
-      <h2>4) Markdown 预览</h2>
-      <article id="markdown-preview" class="preview"></article>
-    </section>
-
-    <section class="card full">
-      <h2>5) 公众号排版与复制</h2>
-      <div class="actions">
-        <button id="format-wechat-btn">生成公众号 HTML</button>
-        <button id="copy-wechat-btn">一键复制 HTML</button>
-      </div>
-      <label>公众号 HTML
-        <textarea id="html-output" rows="10"></textarea>
-      </label>
-      <article id="wechat-preview" class="preview"></article>
-    </section>
-  </main>
->>>>>>> a1fc0b26cd315c041185b2f362ace429de34f012
 
   <template id="item-template">
     <li><button class="link-like"></button></li>
@@ -295,10 +201,7 @@
   <script src="js/sources.js"></script>
   <script src="js/storage.js"></script>
   <script src="js/articleFetcher.js"></script>
-<<<<<<< HEAD
   <script src="js/skills.js"></script>
-=======
->>>>>>> a1fc0b26cd315c041185b2f362ace429de34f012
   <script src="js/promptBuilder.js"></script>
   <script src="js/aiClient.js"></script>
   <script src="js/markdownRenderer.js"></script>

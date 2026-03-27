@@ -10,10 +10,7 @@
 /js/app.js
 /js/sources.js
 /js/articleFetcher.js
-<<<<<<< HEAD
 /js/skills.js
-=======
->>>>>>> a1fc0b26cd315c041185b2f362ace429de34f012
 /js/promptBuilder.js
 /js/aiClient.js
 /js/markdownRenderer.js
@@ -28,7 +25,6 @@
 - RSS 转 JSON + 热点列表渲染
 - 点击热点后自动 deepSearch 全文抓取（r.jina.ai 优先 + allorigins 回退）
 - 英文自动翻译（分段，避免单次长度限制）
-<<<<<<< HEAD
 - 公众号文章 Skill 化处理（默认按“结果先行 → 痛点展开 → 步骤说明 → FAQ → CTA”生成）
 - OpenRouter 深度改写（结构化 Markdown，适配公众号文章节奏）
 - 免Key快速改写（优先生成 1200-1800 字公众号长文，失败时回退结构化模板）
@@ -36,14 +32,6 @@
 - 公众号样式排版（科技 / 商业 / 情感，标题与导读随文章风格调整）
 - Pollinations 自动生成 3 张插图并插入
 - 一键复制安全 HTML（清理 script，可直接粘贴到公众号后台）
-=======
-- OpenRouter 深度改写（结构化 Markdown）
-- 免Key快速改写（短内容自动扩展到约 800-1000 字）
-- Markdown 自动渲染（marked.js）
-- 公众号样式排版（科技 / 商业 / 情感）
-- Pollinations 自动生成 3 张插图并插入
-- 一键复制安全 HTML（清理 script）
->>>>>>> a1fc0b26cd315c041185b2f362ace429de34f012
 - localStorage 保存 API Key / 草稿 / 样式
 
 ## 使用
