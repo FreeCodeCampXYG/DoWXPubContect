@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GitHub Pages 自媒体热点采集 + AI 深度创作系统</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body class="style-tech">
+  <div class="page-shell">
+    <div class="page-backdrop" aria-hidden="true">
+      <span class="backdrop-orb backdrop-orb-a"></span>
+      <span class="backdrop-orb backdrop-orb-b"></span>
+      <span class="backdrop-grid"></span>
+    </div>
+    <header class="topbar hero-card">
+      <div class="hero-copy hero-copy-main">
+        <div class="hero-copy-topline">
+          <p class="eyebrow">Editorial AI Workbench</p>
+          <p class="hero-badge">One-page production flow</p>
+        </div>
+        <h1>全球视野自媒体工作台</h1>
+        <p class="hero-lead">把热点采集、全文提炼、深度写作、插图生成、预览与公众号排版收束进一个更清晰、更高级、更适合长文生产的单页工作台。</p>
+        <div class="hero-metrics" aria-label="工作台能力概览">
+          <article class="hero-metric">
+            <span class="hero-metric-value">5</span>
+            <span class="hero-metric-label">连续步骤</span>
+          </article>
+          <article class="hero-metric">
+            <span class="hero-metric-value">1</span>
+            <span class="hero-metric-label">一页式视图</span>
+          </article>
+          <article class="hero-metric">
+            <span class="hero-metric-value">AI</span>
+            <span class="hero-metric-label">创作中枢</span>
+          </article>
+        </div>
+      </div>
+      <div class="hero-side">
+        <section class="hero-rail card card-accent">
+          <div class="hero-rail-header">
+            <div>
+              <p class="panel-label">Workflow rail</p>
+              <h2 class="hero-rail-title">从热点到发稿的单屏编务流</h2>
+            </div>
+            <p class="hero-rail-copy">左侧负责输入与生成，右侧专注审阅与导出，维持原有流程但把阅读感和操作节奏提升到编辑工作台级别。</p>
+          </div>
+          <div class="hero-steps" aria-label="工作流步骤">
+            <span>01 热点采集</span>
+            <span>02 AI 创作</span>
+            <span>03 插图生成</span>
+            <span>04 Markdown 预览</span>
+            <span>05 公众号排版</span>
+          </div>
+          <section class="status-panel">
+            <div>
+              <p class="panel-label">当前状态</p>
+              <p id="status" class="status">状态：就绪</p>
+            </div>
+            <p class="panel-meta">保持现有流程不变，按步骤推进即可完成从选题到公众号成稿的完整链路。</p>
+          </section>
+        </section>
+      </div>
+    </header>
+
+    <main class="workbench">
+      <section class="workspace-column workspace-column-left">
+        <section class="card step-card source-card">
+          <div class="section-heading section-heading-split">
+            <div class="section-heading-main">
+              <p class="step-index">Step 1</p>
+              <h2>热点采集</h2>
+              <p class="section-intro">选择平台与追踪目标，系统将抓取列表并自动回填首条内容到素材区。</p>
+            </div>
+            <p class="section-kicker">Source scouting</p>
+          </div>
+          <div class="row row-tight">
+            <label>平台
+              <select id="source-platform"></select>
+            </label>
+            <label>目标
+              <input id="source-target" placeholder="如 technology / spacex / ElonMusk / AI" value="technology" />
+            </label>
+          </div>
+          <div class="actions">
+            <button id="fetch-source">抓取热点</button>
+          </div>
+          <ul id="source-list" class="list"></ul>
+        </section>
+
+        <section class="card step-card compose-card">
+          <div class="section-heading section-heading-split">
+            <div class="section-heading-main">
+              <p class="step-index">Step 2</p>
+              <h2>AI 深度创作</h2>
+              <p class="section-intro">围绕公众号长文节奏组织素材、设定模型与风格，然后输出结构化 Markdown。</p>
+            </div>
+            <p class="section-kicker">Writing engine</p>
+          </div>
+          <p class="hint">默认启用“公众号深度文章”处理规则：结果先行、痛点展开、步骤说明、FAQ、温和 CTA</p>
+          <div class="form-cluster">
+            <div class="row">
+              <label>OpenRouter API Key
+                <input id="api-key" type="password" placeholder="sk-or-v1-..." />
+              </label>
+              <label>模型
+                <input id="model" value="meta-llama/llama-3.1-8b-instruct:free" />
+              </label>
+            </div>
+            <div class="row row-tight">
+              <label>改写风格
+                <select id="rewrite-style">
+                  <option>硬核科普</option>
+                  <option>商业分析</option>
+                  <option>情感共鸣</option>
+                </select>
+              </label>
+              <label>公众号样式
+                <select id="theme-style">
+                  <option value="style-tech">科技蓝</option>
+                  <option value="style-business">商业金</option>
+                  <option value="style-emotion">暖色共鸣</option>
+                </select>
+              </label>
+            </div>
+          </div>
+          <label>原始素材（自动填充全文）
+            <textarea id="raw-input" rows="12"></textarea>
+          </label>
+          <div class="actions actions-emphasis">
+            <button id="rewrite-btn">AI 深度改写</button>
+            <button id="rewrite-no-key-btn">免Key快速改写</button>
+            <button id="save-draft-btn">保存草稿</button>
+          </div>
+          <label>Markdown 输出
+            <textarea id="ai-output" rows="13"></textarea>
+          </label>
+        </section>
+
+        <section class="card step-card image-card">
+          <div class="section-heading section-heading-split">
+            <div class="section-heading-main">
+              <p class="step-index">Step 3</p>
+              <h2>AI 插图</h2>
+              <p class="section-intro">根据文章内容自动抽取关键词，生成可直接用于内容编排的插图素材。</p>
+            </div>
+            <p class="section-kicker">Visual assets</p>
+          </div>
+          <p class="hint">自动提取关键词并生成 3 张插图</p>
+          <div class="actions">
+            <button id="generate-images-btn">生成插图</button>
+          </div>
+          <div id="image-grid" class="image-grid"></div>
+        </section>
+      </section>
+
+      <section class="workspace-column workspace-column-right">
+        <section class="card preview-card preview-card-primary">
+          <div class="section-heading section-heading-inline section-heading-with-meta">
+            <div class="section-heading-main">
+              <p class="step-index">Step 4</p>
+              <h2>Markdown 预览</h2>
+            </div>
+            <div class="section-meta-block">
+              <p class="section-intro">实时检查段落层次、标题节奏与阅读流畅度。</p>
+              <p class="section-kicker section-kicker-preview">Review canvas</p>
+            </div>
+          </div>
+          <article id="markdown-preview" class="preview preview-editorial"></article>
+        </section>
+
+        <section class="card preview-card export-card">
+          <div class="section-heading section-heading-inline section-heading-with-meta">
+            <div class="section-heading-main">
+              <p class="step-index">Step 5</p>
+              <h2>公众号排版与复制</h2>
+            </div>
+            <div class="section-meta-block">
+              <p class="section-intro">生成适合公众号后台的 HTML，并在下方完成最终检查与复制。</p>
+              <p class="section-kicker section-kicker-preview">Export ready</p>
+            </div>
+          </div>
+          <div class="actions actions-emphasis">
+            <button id="format-wechat-btn">生成公众号 HTML</button>
+            <button id="copy-wechat-btn">一键复制 HTML</button>
+          </div>
+          <label>公众号 HTML
+            <textarea id="html-output" rows="10"></textarea>
+          </label>
+          <article id="wechat-preview" class="preview preview-wechat preview-editorial"></article>
+        </section>
+      </section>
+    </main>
+  </div>
+
+  <template id="item-template">
+    <li><button class="link-like"></button></li>
+  </template>
+
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="js/sources.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/articleFetcher.js"></script>
+  <script src="js/skills.js"></script>
+  <script src="js/promptBuilder.js"></script>
+  <script src="js/aiClient.js"></script>
+  <script src="js/markdownRenderer.js"></script>
+  <script src="js/wechatFormatter.js"></script>
+  <script src="js/imageGenerator.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
